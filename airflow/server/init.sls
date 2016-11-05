@@ -28,6 +28,8 @@ airflow_dirs:
   virtualenv.manage:
   - requirements: salt://airflow/files/requirements.txt
   - python: /usr/bin/python3
+  - user: airflow
+  - group: airflow
   - require:
     - pkg: airflow_packages
 
@@ -37,6 +39,8 @@ airflow_dag_source:
   - target: /srv/airflow/app
   - rev: {{ server.source.get('rev', server.source.get('revision', 'master')) }}
   - force_reset: True
+  - user: airflow
+  - group: airflow
   - require:
     - file: airflow_dirs
 
@@ -85,6 +89,8 @@ airflow_init_db:
   - env:
     - PYTHONPATH: '/srv/airflow'
     - AIRFLOW_HOME: {{ server.dir.home }}
+  - user: airflow
+  - group: airflow
   - require:
     - file: airflow_dirs
     - virtualenv: /srv/airflow
@@ -104,6 +110,8 @@ airflow_create_user_{{ user_name }}:
   cmd.run:
   - name: source /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_user.py {{ user.username }} {{ user.email }} {{ user.password }}
   - cwd: /srv/airflow
+  - user: airflow
+  - group: airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
     - AIRFLOW_HOME: {{ server.dir.home }}
