@@ -1,0 +1,10 @@
+applications:
+- stories
+classes:
+- service.stories.support
+parameters:
+  stories:
+    server:
+      enabled: true
+      bind:
+        address: 0.0.0.0

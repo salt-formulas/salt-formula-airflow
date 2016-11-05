@@ -1,0 +1,3 @@
+name: "airflow"
+version: "0.1"
+source: "https://gitlab.com/AI4BI/salt-formula-airflow"

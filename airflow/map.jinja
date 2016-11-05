@@ -1,0 +1,24 @@
+
+{%- load_yaml as base_defaults %}
+Debian:
+  pkgs:
+  - python3-pip
+  - python-virtualenv
+  - python3-dev
+  - libpq-dev
+  dir:
+    home: /srv/airflow
+    workspace: /srv/airflow
+  web_workers:
+    engine: sync
+    number: 4
+  workers:
+    engine: CeleryExecutor
+    number: 32
+  auth:
+    engine: password
+    enabled: false
+
+{%- endload %}
+
+{%- set server = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('airflow:server')) %}

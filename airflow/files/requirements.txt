@@ -1,0 +1,4 @@
+airflow[s3, postgres, crypto, password, slack]
+lockfile==0.12.2
+redis
+celery==3.1.2
