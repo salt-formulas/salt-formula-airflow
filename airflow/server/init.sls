@@ -105,7 +105,7 @@ airflow_init_db:
 {%- for user_name, user in server.auth.user.iteritems() %}
 airflow_create_user_{{ user_name }}:
   cmd.run:
-  - name: source /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_user.py {{ user.username }} {{ user.email }} {{ user.password }}
+  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_user.py {{ user.username }} {{ user.email }} {{ user.password }}
   - cwd: /srv/airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
