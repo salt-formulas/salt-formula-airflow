@@ -38,7 +38,6 @@ airflow_dag_source:
   - target: /srv/airflow/app
   - rev: {{ server.source.get('rev', server.source.get('revision', 'master')) }}
   - force_reset: True
-  - user: airflow
   - require:
     - file: airflow_dirs
 
@@ -116,5 +115,14 @@ airflow_create_user_{{ user_name }}:
   - require:
     - cmd: airflow_init_db
 {%- endfor %}
+
+airflow_permissions:
+  cmd.run:
+  - name: chown airflow:airflow . -R
+  - cwd: /srv/airflow
+  - user: root
+  - require:
+    - file: /srv/airflow/bin/create_user.py
+    - virtualenv: /srv/airflow
 
 {%- endif %}
