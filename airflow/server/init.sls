@@ -107,8 +107,6 @@ airflow_create_user_{{ user_name }}:
   cmd.run:
   - name: source /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_user.py {{ user.username }} {{ user.email }} {{ user.password }}
   - cwd: /srv/airflow
-  - user: airflow
-  - group: airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
     - AIRFLOW_HOME: {{ server.dir.home }}
