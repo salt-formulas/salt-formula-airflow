@@ -1,4 +1,6 @@
 
+from __future__ import print_function
+
 import sys
 from airflow import models, settings
 from airflow.contrib.auth.backends.password_auth import PasswordUser
@@ -9,6 +11,9 @@ user.email = sys.argv[2]
 user.password = sys.argv[3]
 session = settings.Session()
 session.add(user)
-session.commit()
+try:
+    session.commit()
+except:
+    print("User already exists.")
 session.close()
 exit()
