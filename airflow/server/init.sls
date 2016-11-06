@@ -29,7 +29,6 @@ airflow_dirs:
   - requirements: salt://airflow/files/requirements.txt
   - python: /usr/bin/python3
   - user: airflow
-  - group: airflow
   - require:
     - pkg: airflow_packages
 
@@ -40,7 +39,6 @@ airflow_dag_source:
   - rev: {{ server.source.get('rev', server.source.get('revision', 'master')) }}
   - force_reset: True
   - user: airflow
-  - group: airflow
   - require:
     - file: airflow_dirs
 
