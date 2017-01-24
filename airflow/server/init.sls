@@ -110,7 +110,7 @@ airflow_init_db:
   - name: /srv/airflow/bin/airflow initdb
   - cwd: /srv/airflow
   - env:
-    - PYTHONPATH: /srv/airflow
+    - PYTHONPATH: {{ server.dir.home }}/app
     - AIRFLOW_HOME: {{ server.dir.home }}/app
   - user: airflow
   - group: airflow
