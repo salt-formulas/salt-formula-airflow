@@ -33,10 +33,16 @@ Single airflows service
         enabled: true
         worker: true
         secret_key: secret
-        source:
-          engine: git
-          address: git@gitlab.com:group/dags.git
-          rev: master
+        dag:
+          dagbag:
+            engine: git
+            address: git@gitlab.com:group/dags.git
+            rev: master
+        plugin:
+          pack-one:
+            engine: git
+            address: git@gitlab.com:group/dags.git
+            rev: master
         database:
           engine: postgres
           host: 127.0.0.1

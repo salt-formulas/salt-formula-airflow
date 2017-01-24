@@ -16,6 +16,9 @@ airflow_dirs:
   file.directory:
   - names:
     - /srv/airflow
+    - /srv/airflow/app
+    - /srv/airflow/plugins
+    - /srv/airflow/dags
     - /var/log/airflow
     - /srv/airflow/flags
   - makedirs: true
@@ -32,14 +35,39 @@ airflow_dirs:
   - require:
     - pkg: airflow_packages
 
-airflow_dag_source:
+{%- for dag_name, dag_source in server.dag.items() %}
+airflow_dag_source_{{ dag_name }}:
   git.latest:
-  - name: {{ server.source.address }}
-  - target: /srv/airflow/app
-  - rev: {{ server.source.get('rev', server.source.get('revision', 'master')) }}
+  - name: {{ dag_source.source.address }}
+  - target: /srv/airflow/dags/{{ dag_name }}
+  - rev: {{ dag_source.source.get('rev', dag_source.source.get('revision', 'master')) }}
   - force_reset: True
   - require:
     - file: airflow_dirs
+{%- endfor %}
+
+{%- for plugin_name, plugin_source in server.plugin.items() %}
+airflow_plugin_source_{{ plugin_name }}:
+  git.latest:
+  - name: {{ dag_source.source.address }}
+  - target: /srv/airflow/plugins/{{ plugin_name }}
+  - rev: {{ plugin_source.source.get('rev', plugin_source.source.get('revision', 'master')) }}
+  - force_reset: True
+  - require:
+    - file: airflow_dirs
+
+airflow_plugin_install_{{ plugin_name }}:
+  cmd.run:
+  - name: make update
+  - cwd: /srv/airflow/plugins/{{ plugin_name }}
+  - env:
+    - AIRFLOW_HOME: {{ server.dir.home }}
+  - user: airflow
+  - group: airflow
+  - require:
+    - file: airflow_dirs
+    - git: airflow_plugin_source_{{ plugin_name }}
+{%- endfor %}
 
 /var/log/airflow/access.log:
   file.managed:
