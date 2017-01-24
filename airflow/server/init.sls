@@ -135,7 +135,7 @@ airflow_create_user_{{ user_name }}:
   - cwd: /srv/airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
-    - AIRFLOW_HOME: {{ server.dir.home }}
+    - AIRFLOW_HOME: {{ server.dir.home }}/app
   - require:
     - cmd: airflow_init_db
 {%- endfor %}
