@@ -58,7 +58,7 @@ airflow_plugin_source_{{ plugin_name }}:
 
 airflow_plugin_install_{{ plugin_name }}:
   cmd.run:
-  - name: make update
+  - name: . /srv/airflow/bin/activate; make update
   - cwd: /srv/airflow/plugins/{{ plugin_name }}
   - env:
     - AIRFLOW_HOME: {{ server.dir.home }}
