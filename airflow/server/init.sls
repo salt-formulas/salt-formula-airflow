@@ -84,7 +84,7 @@ airflow_plugin_install_{{ plugin_name }}:
     - file: airflow_dirs
 
 
-{{ server.dir.home }}/airflow.cfg:
+{{ server.dir.home }}/app/airflow.cfg:
   file.managed:
   - source: salt://airflow/files/config.cfg
   - template: jinja
@@ -111,7 +111,7 @@ airflow_init_db:
   - cwd: /srv/airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
-    - AIRFLOW_HOME: {{ server.dir.home }}
+    - AIRFLOW_HOME: {{ server.dir.home }}/app
   - user: airflow
   - group: airflow
   - require:
