@@ -61,7 +61,7 @@ airflow_plugin_install_{{ plugin_name }}:
   - name: . /srv/airflow/bin/activate; make update
   - cwd: /srv/airflow/plugins/{{ plugin_name }}
   - env:
-    - AIRFLOW_HOME: {{ server.dir.home }}
+    - AIRFLOW_HOME: {{ server.dir.home }}/app
   - require:
     - file: airflow_dirs
     - git: airflow_plugin_source_{{ plugin_name }}
