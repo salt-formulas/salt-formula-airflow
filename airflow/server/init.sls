@@ -62,8 +62,6 @@ airflow_plugin_install_{{ plugin_name }}:
   - cwd: /srv/airflow/plugins/{{ plugin_name }}
   - env:
     - AIRFLOW_HOME: {{ server.dir.home }}
-  - user: airflow
-  - group: airflow
   - require:
     - file: airflow_dirs
     - git: airflow_plugin_source_{{ plugin_name }}
