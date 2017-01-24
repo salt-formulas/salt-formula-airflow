@@ -112,8 +112,6 @@ airflow_init_db:
   - env:
     - PYTHONPATH: {{ server.dir.home }}/app
     - AIRFLOW_HOME: {{ server.dir.home }}/app
-  - user: airflow
-  - group: airflow
   - require:
     - file: airflow_dirs
     - virtualenv: /srv/airflow
@@ -123,8 +121,6 @@ airflow_init_db:
   - source: salt://airflow/files/create_user.py
   - mode: 700
   - template: jinja
-  - user: airflow
-  - group: airflow
   - require:
     - cmd: airflow_init_db
 
