@@ -35,7 +35,7 @@ airflow_dirs:
   - require:
     - pkg: airflow_packages
 
-{%- for dag_name, dag_source in server.dag.iteritems() %}
+{%- for dag_name, dag_source in server.dag.items() %}
 airflow_dag_source_{{ dag_name }}:
   git.latest:
   - name: {{ dag_source.address }}
@@ -46,10 +46,10 @@ airflow_dag_source_{{ dag_name }}:
     - file: airflow_dirs
 {%- endfor %}
 
-{%- for plugin_name, plugin_source in server.plugin.iteritems() %}
+{%- for plugin_name, plugin_source in server.plugin.items() %}
 airflow_plugin_source_{{ plugin_name }}:
   git.latest:
-  - name: {{ dag_source.address }}
+  - name: {{ plugin_source.address }}
   - target: /srv/airflow/plugins/{{ plugin_name }}
   - rev: {{ plugin_source.get('rev', plugin_source.get('revision', 'master')) }}
   - force_reset: True
