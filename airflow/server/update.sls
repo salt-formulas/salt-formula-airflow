@@ -8,7 +8,7 @@ include:
 airflow_services:
   supervisord.running:
     - names:
-      - airflow_airflow
+      - airflow_webserver
       - airflow_scheduler
       - airflow_worker
     - restart: True
