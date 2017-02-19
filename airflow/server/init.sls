@@ -35,6 +35,21 @@ airflow_dirs:
   - require:
     - pkg: airflow_packages
 
+{%- if server.source is defined and server.source.engine == "git" %}
+airflow_installation:
+  pip.installed:
+  {%- if server.source.get('engine', 'git') == 'git' %}
+  - editable: "git+{{ server.source.address }}#egg=airflow"
+  {%- elif server.source.engine == 'pip' %}
+  - name: airflow {%- if server.version is defined %}=={{ server.version }}{% endif %}
+  {%- endif %}
+  - name: mbot
+  - bin_env: /srv/airflow
+  - exists_action: w
+  - require:
+    - virtualenv: /srv/airflow
+{%- endif %}
+
 {%- for dag_name, dag_source in server.dag.items() %}
 airflow_dag_source_{{ dag_name }}:
   git.latest:

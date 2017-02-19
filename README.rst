@@ -33,6 +33,10 @@ Single airflows service
         enabled: true
         worker: true
         secret_key: secret
+        source:
+          engine: git
+          address: https://github.com/apache/incubator-airflow.git
+          rev: master       
         dag:
           dagbag:
             engine: git
@@ -43,6 +47,8 @@ Single airflows service
             engine: git
             address: git@gitlab.com:group/dags.git
             rev: master
+          pipplugin:
+            engine: pip
         database:
           engine: postgres
           host: 127.0.0.1
@@ -57,6 +63,17 @@ Single airflows service
         logging:
           engine: sentry
           dsn: dsn
+        connection:
+          db01:
+            name: db01
+            host: localhost
+            port: 1234
+            user: username
+            database: db_name
+            password: password
+            type: postgres
+            extra:
+              token: secret
 
     supervisor:
       server:
