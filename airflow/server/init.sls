@@ -39,7 +39,7 @@ airflow_dirs:
 airflow_installation:
   pip.installed:
   {%- if server.source.get('engine', 'git') == 'git' %}
-  - editable: "git+{{ server.source.address }}#egg=airflow"
+  - editable: "git+{{ server.source.address }}@{{ server.source.get("rev", "master") }}#egg=airflow"
   {%- elif server.source.engine == 'pip' %}
   - name: airflow {%- if server.version is defined %}=={{ server.version }}{% endif %}
   {%- endif %}
