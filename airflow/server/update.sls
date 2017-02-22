@@ -7,8 +7,7 @@ include:
 
 airflow_webserver_services_dead:
   supervisord.dead:
-    - names:
-      - airflow_webserver
+    - name: airflow_webserver
 
 airflow_webserver_services:
   supervisord.running:
@@ -16,7 +15,7 @@ airflow_webserver_services:
       - airflow_webserver
       - airflow_scheduler
     - restart: True
-  - require:
-    - supervisord: airflow_webserver_services_dead
+    - require:
+      - supervisord: airflow_webserver_services_dead
 
 {%- endif %}

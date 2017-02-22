@@ -7,15 +7,14 @@ include:
 
 airflow_worker_services_dead:
   supervisord.dead:
-    - names:
-      - airflow_worker
+    - name: airflow_worker
 
 airflow_worker_services:
   supervisord.running:
     - names:
       - airflow_worker
     - restart: True
-  - require:
-    - supervisord: airflow_worker_services_dead
+    - require:
+      - supervisord: airflow_worker_services_dead
 
 {%- endif %}
