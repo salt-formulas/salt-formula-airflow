@@ -14,6 +14,8 @@ Single airflows service
 .. code-block:: yaml
 
     airflow:
+      worker:
+        enabled: true
       server:
         enabled: true
         backup: true
