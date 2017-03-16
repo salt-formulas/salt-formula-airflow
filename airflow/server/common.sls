@@ -14,6 +14,7 @@ airflow_user:
 airflow_dirs:
   file.directory:
   - names:
+    - /etc/airflow
     - /srv/airflow
     - /srv/airflow/app
     - /srv/airflow/plugins
@@ -108,6 +109,14 @@ airflow_plugin_install_{{ plugin_name }}:
   - require:
     - file: airflow_dirs
 
+/etc/airflow/secrets.yaml:
+  file.managed:
+  - source: salt://airflow/files/secrets.conf
+  - template: jinja
+  - mode: 644
+  - require:
+    - file: airflow_dirs
+
 /srv/airflow/bin/start-service.sh:
   file.managed:
   - source: salt://airflow/files/start-service.sh
@@ -156,30 +165,16 @@ airflow_init_db:
 
 {%- if server.connection is defined %}
 {%- for conn_name, conn in server.connection.iteritems() %}
-{% if conn.password is defined %}
-{%- if conn.database is defined %}
-{%- set db = '/' + conn.get('database', None) %}
-{%- else %}
-{%- set db = '' %}
-{%- endif %}
-{%- if conn.port is defined %}
-{%- set port = ':' + conn.get('port', '')|string %}
-{%- else %}
-{%- set port = '' %}
-{%- endif %}
-{%- set uri = conn.type + '://' + conn.user + ':' + conn.password + '@' + conn.host + port + db %}
-{%- else %}
-{%- set uri = '' %}
-{%- endif %}
 airflow_create_conn_{{ conn_name }}:
   cmd.run:
-  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_connection.py {{ conn.get('name', conn_name) }} {{ conn.type }} {{ uri }} '{{ dumps(conn.get('extra', {}))|safe }}' {{ conn.get("update", False)|python }}
+  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_connection.py /etc/airflow/secrets.yaml
   - cwd: /srv/airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
     - AIRFLOW_HOME: {{ server.dir.home }}/app
   - require:
     - cmd: airflow_init_db
+    - file: /etc/airflow/secrets.yaml
 {%- endfor %}
 {%- endif %}
 

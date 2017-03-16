@@ -1,15 +1,16 @@
 
+
 from __future__ import print_function
 
+import yaml
+import json
 import sys
 from airflow import models, settings
 
-name = sys.argv[1]
-c_type = sys.argv[2]
-uri = sys.argv[3]
-extra = sys.argv[4]
-create = eval(sys.argv[5])
+connections = {}
 
+with open(sys.argv[1], "r") as file:
+    connections = yaml.load(file)['connections']
 
 session = settings.Session()
 
@@ -61,12 +62,25 @@ def get_or_update_conn(name, **kwargs):
     return con
 
 
-if create:
-    get_or_update_conn(
-        name, uri=uri, extra=extra)
-else:
-    get_or_create_conn(
-        name, uri=uri, extra=extra)
+for conn_name, conn in connections.items():
+
+    uri = None
+
+    extra = conn.get('extra', {})
+    type = conn.get('type', {})
+
+    if 'password' in conn and 'host' in conn:
+        db = '/' + conn.get('database', None)
+        port = ':%s' % conn.get('port', '')
+        uri = (conn['type'] + '://' + conn['user'] +
+               ':' + conn['password'] + '@' + conn['host'] + port + db)
+
+    if conn.get("update", False):
+        get_or_update_conn(
+            conn_name, type=type, uri=uri, extra=json.dumps(extra))
+    else:
+        get_or_create_conn(
+            conn_name, type=type, uri=uri, extra=json.dumps(extra))
 
 
 exit()
