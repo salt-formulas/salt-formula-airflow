@@ -173,7 +173,7 @@ airflow_init_db:
 {%- endif %}
 airflow_create_conn_{{ conn_name }}:
   cmd.run:
-  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_connection.py {{ conn.get('name', conn_name) }} {{ conn.type }} {{ uri }} '{{ extra|json }}' {{ conn.get("update", False)|python }}
+  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_connection.py {{ conn.get('name', conn_name) }} {{ conn.type }} {{ uri }} '{{ conn.get('extra', {})|json }}' {{ conn.get("update", False)|python }}
   - cwd: /srv/airflow
   - env:
     - PYTHONPATH: '/srv/airflow'
