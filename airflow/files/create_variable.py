@@ -15,7 +15,9 @@ create = eval(sys.argv[3])
 def get_variable(key):
     """Returns variable from Variable or config defaults"""
 
-    return models.Variable.get(key)
+    return session.query(
+        models.Variable).filter_by(
+        key=key).first()
 
 
 def create_variable(key, value):
