@@ -163,11 +163,11 @@ airflow_init_db:
 {%- set db = None %}
 {%- endif %}
 {%- if conn.port is defined %}
-{%- set port = ':' + conn.get('port', '') %}
+{%- set port = ':' + conn.get('port', '')|string %}
 {%- else %}
 {%- set port = '' %}
 {%- endif %}
-{%- set uri = conn.type + '://' + conn.user + ':' + conn.password + '@' + conn.host + port + database %}
+{%- set uri = conn.type + '://' + conn.user + ':' + conn.password + '@' + conn.host + port + db %}
 {%- else %}
 {%- set uri = None %}
 {%- endif %}
