@@ -67,7 +67,7 @@ for conn_name, conn in connections.items():
     uri = None
 
     extra = conn.get('extra', {})
-    type = conn.get('type', {})
+    type = conn.get('type', None)
 
     if 'password' in conn and 'host' in conn:
         db = ''
@@ -81,10 +81,10 @@ for conn_name, conn in connections.items():
 
     if conn.get("update", False):
         get_or_update_conn(
-            conn_name, type=type, uri=uri, extra=json.dumps(extra))
+            conn_name, conn_type=type, uri=uri, extra=json.dumps(extra))
     else:
         get_or_create_conn(
-            conn_name, type=type, uri=uri, extra=json.dumps(extra))
+            conn_name, conn_type=type, uri=uri, extra=json.dumps(extra))
 
 
 exit()
