@@ -70,8 +70,12 @@ for conn_name, conn in connections.items():
     type = conn.get('type', {})
 
     if 'password' in conn and 'host' in conn:
-        db = '/' + conn.get('database', None)
-        port = ':%s' % conn.get('port', '')
+        db = ''
+        port = ''
+        if 'database' in conn:
+            db = '/' + conn.get('database', '')
+        if 'port' in conn:
+            port = ':%s' % conn.get('port', '')
         uri = (conn['type'] + '://' + conn['user'] +
                ':' + conn['password'] + '@' + conn['host'] + port + db)
 

@@ -2,7 +2,10 @@
 from __future__ import print_function
 
 import sys
-from airflow import models
+
+from airflow import models, settings
+
+session = settings.Session()
 
 key = sys.argv[1]
 value = sys.argv[2]
@@ -21,9 +24,15 @@ def create_variable(key, value):
     return models.Variable.set(key, value)
 
 
-if create and not get_variable(key):
+var = get_variable(key)
+
+if create and not var:
     create_variable(key, value)
 else:
-    create_variable(key, value)
+    if var:
+        var.value = value
+        session.commit()
+    else:
+        create_variable(key, value)
 
 exit()
