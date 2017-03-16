@@ -138,6 +138,66 @@ airflow_init_db:
   - require:
     - cmd: airflow_init_db
 
+/srv/airflow/bin/create_connection.py:
+  file.managed:
+  - source: salt://airflow/files/create_connection.py
+  - mode: 700
+  - template: jinja
+  - require:
+    - cmd: airflow_init_db
+
+/srv/airflow/bin/create_variable.py:
+  file.managed:
+  - source: salt://airflow/files/create_variable.py
+  - mode: 700
+  - template: jinja
+  - require:
+    - cmd: airflow_init_db
+
+{%- if server.connection is defined %}
+{%- for conn_name, conn in server.connection.iteritems() %}
+{% if conn.password is defined %}
+{%- if conn.database is defined %}
+{%- set db = '/' + conn.get('database', None) %}
+{%- else %}
+{%- set db = None %}
+{%- endif %}
+{%- if conn.port is defined %}
+{%- set port = ':' + conn.get('port', '') %}
+{%- else %}
+{%- set port = '' %}
+{%- endif %}
+{%- set uri = conn.type + '://' + conn.user + ':' + conn.password + '@' + conn.host + port + database %}
+{%- else %}
+{%- set uri = None %}
+{%- endif %}
+airflow_create_conn_{{ conn_name }}:
+  cmd.run:
+  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_connection.py {{ conn.get('name', conn_name) }} {{ conn.type }} {{ uri }} '{{ extra|json }}' {{ conn.get("update", False)|python }}
+  - cwd: /srv/airflow
+  - env:
+    - PYTHONPATH: '/srv/airflow'
+    - AIRFLOW_HOME: {{ server.dir.home }}/app
+  - require:
+    - cmd: airflow_init_db
+{%- endfor %}
+{%- endif %}
+
+{%- if server.variable is defined %}
+{%- for var_name, var in server.variable.iteritems() %}
+airflow_create_variable_{{ var_name }}:
+  cmd.run:
+  - name: . /srv/airflow/bin/activate && /srv/airflow/bin/python /srv/airflow/bin/create_variable.py {{ var.get('name', var_name) }} {{ var.value }} {{ var.get("update", False)|python }}
+  - cwd: /srv/airflow
+  - env:
+    - PYTHONPATH: '/srv/airflow'
+    - AIRFLOW_HOME: {{ server.dir.home }}/app
+  - require:
+    - cmd: airflow_init_db
+{%- endfor %}
+{%- endif %}
+
+
 {%- for user_name, user in server.auth.user.iteritems() %}
 airflow_create_user_{{ user_name }}:
   cmd.run:

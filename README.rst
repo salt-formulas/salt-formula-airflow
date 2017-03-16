@@ -65,6 +65,10 @@ Single airflows service
         logging:
           engine: sentry
           dsn: dsn
+        variable:
+          my_var:
+            name: my_var_name
+            value: TOKEN
         connection:
           db01:
             name: db01
@@ -73,7 +77,7 @@ Single airflows service
             user: username
             database: db_name
             password: password
-            type: postgres
+            type: postgresql
             extra:
               token: secret
 
