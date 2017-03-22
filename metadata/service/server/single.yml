@@ -1,5 +1,5 @@
 applications:
-- stories
+- airflow
 classes:
 - service.stories.support
 parameters:
