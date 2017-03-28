@@ -65,6 +65,11 @@ Single airflows service
         logging:
           engine: sentry
           dsn: dsn
+          remote:
+            enabled: true
+            directory: s3://tmp/logs/prd
+            connection_id: db01
+            encrypt: false
         variable:
           my_var:
             name: my_var_name
