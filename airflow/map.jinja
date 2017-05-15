@@ -20,6 +20,10 @@ Debian:
   auth:
     engine: password
     enabled: false
+  database:
+    pool:
+      size: 5
+      recycle: 3600
 
 {%- endload %}
 
