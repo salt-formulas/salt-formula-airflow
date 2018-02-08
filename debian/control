@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/tcpcloud/salt-formula-stories.git
 
 Package: salt-formula-stories
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: stories salt formula
  Install and configure stories system.
